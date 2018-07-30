@@ -18,10 +18,14 @@ from django.urls import path
 from django.conf.urls import include, url
 from django.contrib.auth import views as auth_views
 from gratitude import views as gratitude_views
+from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/login/', auth_views.login, name='login'),
-    path('accounts/logout/', auth_views.logout, name='logout'),
-    # path('accounts/signup/', tunr_views.sign_up, name='signup'),
+    #path('accounts/login/', auth_views.login, name='login'),
+    #path('accounts/logout/', auth_views.logout, name='logout'),
+    path('accounts/signup/', gratitude_views.sign_up, name='signup'),
+    path('api-auth', include('rest_framework.urls', namespace='rest_framework')),
+    path('accounts/', include('django.contrib.auth.urls')),
+
 ]
