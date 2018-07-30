@@ -14,12 +14,12 @@ def sign_up(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            return redirect('artist_list')
+            # user = authenticate(username=username, password=raw_password)
+            # login(request, user)
+            return redirect('gratitude_list')
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
