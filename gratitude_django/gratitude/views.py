@@ -1,96 +1,33 @@
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
 
-from .models import Entry
+from django.http import HttpResponseRedirect
+from django.contrib.auth.models import User
+from rest_framework import permissions, status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .serializers import UserSerializer, UserSerializerWithToken
 
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
-
-from rest_framework import generics
-# from .serializers import entrieserializer
-# Create your views here.
-
-def sign_up(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password')
-            # user = authenticate(username=username, password=raw_password)
-            # login(request, user)
-            return redirect('gratitude_list')
-    else:
-        form = UserCreationForm()
-    return render(request, 'registration/signup.html', {'form': form})
-
-def entry_list(request):
-    entries = Entry.objects.all().values()
-    entries_list = list(entries)
-    return JsonResponse(entries_list, safe=False)
-
-def entry_detail(request, pk):
-    entry = Entry.objects.get(id=pk).values()
-    return JsonResponse(entry, safe=False)
-
-# @login_required
-def entry_create(request):
-    if request.is_ajax():
-        if request.method == 'POST':
-            entry = request.body.save()
-            # form = entryForm(request.POST)
-            # if form.is_valid():
-            #     entry = form.save()
-            return redirect('entry_detail', pk=entry.pk)
-        # else:
-        #     form = entryForm()
-        # return render(request, 'gratitude/entry_form.html', {'form': form})
-        return HttpResponse("OK")
-
-# @login_required
-def entry_edit(request, pk):
-    entry = Entry.objects.get(pk=pk)
-    if request.method == "POST":
-        form = entryForm(request.POST, instance=entry)
-        if form.is_valid():
-            entry = form.save()
-            return redirect('entry_detail', pk=entry.pk)
-    else:
-        form = entryForm(instance=entry)
-    return render(request, 'gratitude/entry_form.html', {'form': form})
-
-
-# @login_required
-def entry_delete(request, pk):
-    Entry.objects.get(id=pk).delete()
-    return redirect('entry_list')
-
-
-
-
-
-
-
-
-
-
-
-# class EntryList(generics.ListCreateAPIView):
-#     queryset = Entry.objects.all()
-#     serializer_class = entrieserializer
+@api_view(['GET'])
+def current_user(request):
+    """
+    Determine the current user by their token, and return their data
+    """
     
-
-# class EntryDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Entry.objects.all()
-#     serializer_class = entrieserializer
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)
 
 
-# def entries_list(request):
-#     """
-#     Returns Json list of all restaurants
-#     """
-#     if request.method == "GET":
-#         rest_list = Restaurant.objects.order_by('-pub_date')
-#         serializer = RestaurantSerializer(rest_list, many=True)
-#         return JsonResponse(serializer.data, safe=False)
+class UserList(APIView):
+    """
+    Create a new user. It's called 'UserList' because normally we'd have a get
+    method here too, for retrieving a list of all User objects.
+    """
+
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        serializer = UserSerializerWithToken(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

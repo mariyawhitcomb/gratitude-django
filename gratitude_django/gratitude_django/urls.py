@@ -15,10 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from gratitude.resources import EntryResource 
+from gratitude.resources import EntryResource
+from rest_framework_jwt.views import obtain_jwt_token
 
 
-# from django.urls import path
+from django.urls import path
 # from django.contrib.auth import views as auth_views
 # from gratitude import views as gratitude_views
 # from rest_framework.routers import DefaultRouter
@@ -29,4 +30,6 @@ entry_resource = EntryResource()
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^gratitude/', include(entry_resource.urls)),
+    path('token-auth/', obtain_jwt_token),
+     path('gratitude/', include('gratitude.urls')),
 ]
