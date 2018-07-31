@@ -22,6 +22,7 @@ from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('gratitude.urls')),
     #path('accounts/login/', auth_views.login, name='login'),
     #path('accounts/logout/', auth_views.logout, name='logout'),
     path('accounts/signup/', gratitude_views.sign_up, name='signup'),
