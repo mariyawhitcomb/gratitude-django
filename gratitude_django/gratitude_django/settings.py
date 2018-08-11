@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'gratitude',
     'rest_framework',
     'corsheaders',
-    # 'gratitude.apps.CoreConfig'
 ]
 
 MIDDLEWARE = [
@@ -132,7 +131,7 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -140,7 +139,12 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+    # 'DEFAULT_RENDERER_CLASSES': (
+    #     'rest_framework.renderers.<corresponding_renderer>',
+    #     ...
+    # )
 }
 JWT_AUTH = {
     'JWT_RESPONSE_PAYLOAD_HANDLER': 'gratitude_django.utils.my_jwt_response_handler'
+
 }

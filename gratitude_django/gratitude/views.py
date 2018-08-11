@@ -1,28 +1,24 @@
+#views.py
 
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from rest_framework import permissions, status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import UserSerializer, UserSerializerWithToken
+from django.http import JsonResponse
+from .models import Entry
 
 @api_view(['GET'])
+@permission_classes((permissions.AllowAny,))
 def current_user(request):
-    """
-    Determine the current user by their token, and return their data
-    """
-    
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
 
 
 class UserList(APIView):
-    """
-    Create a new user. It's called 'UserList' because normally we'd have a get
-    method here too, for retrieving a list of all User objects.
-    """
-
+ 
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request, format=None):
@@ -31,3 +27,14 @@ class UserList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+def entries_list(request, pk):
+    entries = Entry.objects.filter(author=pk).values('reason1', 'reason2', 'reason3', 'goal', 'date') # only grab some attributes from our database, else we can't serialize it.
+    entries_list = list(entries)
+    return JsonResponse(entries_list, safe=False) # safe=False is needed if the first parameter is not a dictionary.
+
+def entry_detail(request, pk, date):
+    entry = Entry.objects.filter(author=pk, date=date).values('reason1', 'reason2', 'reason3', 'goal', 'date')
+    entry_date_list = list(entry)
+    return JsonResponse(entry_date_list, safe=False)
+
