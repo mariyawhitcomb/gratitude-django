@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+from .models import Entry
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -37,3 +38,13 @@ class UserSerializerWithToken(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('token', 'username', 'password', 'id')
+
+class EntrySerializer(serializers.ModelSerializer):
+    author = serializers.HyperlinkedRelatedField(
+        view_name= 'current_user',
+        many=False,
+        read_only=True
+    )
+    class Meta:
+        model = Entry
+        fields = ('id', 'reason1', 'reason2', 'reason3', 'goal', 'date', 'author')

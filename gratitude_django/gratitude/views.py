@@ -29,12 +29,12 @@ class UserList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 def entries_list(request, pk):
-    entries = Entry.objects.filter(author=pk).values('reason1', 'reason2', 'reason3', 'goal', 'date') # only grab some attributes from our database, else we can't serialize it.
+    entries = Entry.objects.filter(author=pk).values('reason1', 'reason2', 'reason3', 'goal', 'date', 'id') # only grab some attributes from our database, else we can't serialize it.
     entries_list = list(entries)
     return JsonResponse(entries_list, safe=False) # safe=False is needed if the first parameter is not a dictionary.
 
 def entry_detail(request, pk, date):
-    entry = Entry.objects.filter(author=pk, date=date).values('reason1', 'reason2', 'reason3', 'goal', 'date')
+    entry = Entry.objects.filter(author=pk, date=date).values('reason1', 'reason2', 'reason3', 'goal', 'date', 'id')
     entry_date_list = list(entry)
     return JsonResponse(entry_date_list, safe=False)
 
