@@ -9,7 +9,7 @@ env: flex # for Google Cloud Flexible App Engine
 # accessible through os.environ['VARIABLE_NAME']
 env_variables:
 # the secret key used for the Django app (from PROJECT-DIRECTORY/settings.py)
-  SECRET_KEY: 'akj!1q04turi1dpmj=gv*b1641cg2=^zdyf9a@!)gkvz0$-w^t' 
+ export SECRET_KEY: 'akj!1q04turi1dpmj=gv*b1641cg2=^zdyf9a@!)gkvz0$-w^t' 
   DEBUG: 'False' # always False for deployment
   
 # everything after /cloudsql/ can be found by entering >> gcloud sql instances describe DATABASE-NAME << in your Terminal

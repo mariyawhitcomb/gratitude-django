@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('reason3', models.CharField(max_length=100)),
                 ('goal', models.TextField(blank=True, null=True)),
                 ('date', models.DateField(default=datetime.date.today, verbose_name='Date')),
-                ('author', models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='entries', to=settings.AUTH_USER_MODEL)),
+                ('author', models.IntegerField()),
             ],
         ),
     ]
