@@ -124,8 +124,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
+STATIC_ROOT = os.path.join(GRATITUDE_DJANGO, 'staticfiles')
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(GRATITUDE_DJANGO, 'static'),
+)
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
@@ -148,3 +153,7 @@ JWT_AUTH = {
     'JWT_RESPONSE_PAYLOAD_HANDLER': 'gratitude_django.utils.my_jwt_response_handler'
 
 }
+
+# Configure Django App for Heroku.
+import django_heroku
+django_heroku.settings(locals())
